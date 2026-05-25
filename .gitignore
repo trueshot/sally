@@ -1,0 +1,13 @@
+# OS / editor clutter
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*~
+
+# Node (if/when added)
+node_modules/
+npm-debug.log*
+
+# Local-only working files
+session-notes.md
