@@ -148,99 +148,99 @@
       ]
     },
     "4th": {
-      "status": "pending",
+      "status": "awaiting_review",
       "items": [
         {
           "id": "4th.1",
           "desc": "Run `git status` in your repo — is it clean?",
-          "status": "pending",
+          "status": "self_reported",
           "gradedBy": null,
-          "gradedAt": null,
+          "gradedAt": "2026-05-25T18:26:19.047Z",
           "notes": null
         },
         {
           "id": "4th.2",
           "desc": "Commit any uncommitted work with meaningful commit messages",
-          "status": "pending",
+          "status": "self_reported",
           "gradedBy": null,
-          "gradedAt": null,
+          "gradedAt": "2026-05-25T18:26:19.047Z",
           "notes": null
         },
         {
           "id": "4th.3",
           "desc": "Verify repo is pushed to remote (if applicable)",
-          "status": "pending",
+          "status": "self_reported",
           "gradedBy": null,
-          "gradedAt": null,
+          "gradedAt": "2026-05-25T18:26:19.047Z",
           "notes": null
         },
         {
           "id": "4th.4",
           "desc": "No sensitive data in repo (credentials, keys, etc.)",
-          "status": "pending",
+          "status": "self_reported",
           "gradedBy": null,
-          "gradedAt": null,
+          "gradedAt": "2026-05-25T18:26:19.047Z",
           "notes": null
         },
         {
           "id": "4th.5",
           "desc": ".gitignore exists and excludes appropriate files",
-          "status": "pending",
+          "status": "self_reported",
           "gradedBy": null,
-          "gradedAt": null,
+          "gradedAt": "2026-05-25T18:26:19.047Z",
           "notes": null
         }
       ]
     },
     "5th": {
-      "status": "pending",
+      "status": "awaiting_review",
       "items": [
         {
           "id": "5th.1",
           "desc": "List all tools in your repo",
-          "status": "pending",
+          "status": "self_reported",
           "gradedBy": null,
-          "gradedAt": null,
+          "gradedAt": "2026-05-25T18:26:54.101Z",
           "notes": null
         },
         {
           "id": "5th.2",
           "desc": "Verify TOOLS.md documents each tool with Purpose, Location, Usage",
-          "status": "pending",
+          "status": "self_reported",
           "gradedBy": null,
-          "gradedAt": null,
+          "gradedAt": "2026-05-25T18:26:54.101Z",
           "notes": null
         },
         {
           "id": "5th.3",
           "desc": "Run each tool — does it work?",
-          "status": "pending",
+          "status": "self_reported",
           "gradedBy": null,
-          "gradedAt": null,
+          "gradedAt": "2026-05-25T18:26:54.101Z",
           "notes": null
         },
         {
           "id": "5th.4",
           "desc": "Each tool has --help that produces useful output",
-          "status": "pending",
+          "status": "self_reported",
           "gradedBy": null,
-          "gradedAt": null,
+          "gradedAt": "2026-05-25T18:26:54.101Z",
           "notes": null
         },
         {
           "id": "5th.5",
           "desc": "Each tool has header comment with author and date",
-          "status": "pending",
+          "status": "self_reported",
           "gradedBy": null,
-          "gradedAt": null,
+          "gradedAt": "2026-05-25T18:26:54.101Z",
           "notes": null
         },
         {
           "id": "5th.6",
           "desc": "Fix any broken tools or remove them from TOOLS.md",
-          "status": "pending",
+          "status": "self_reported",
           "gradedBy": null,
-          "gradedAt": null,
+          "gradedAt": "2026-05-25T18:26:54.101Z",
           "notes": null
         }
       ]
