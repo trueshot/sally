@@ -95,6 +95,64 @@ after Post" (ordhead-side). UNANSWERED: rate tables, per-salesman payout, where
 rep commission is computed/stored. Distinct from detroit:--facet-route-liqcomm
 (GET /api/liqcomm = grower LIQUIDATION commission, cf. Core LincolnPark).
 No facet covers sales-REP commission. Candidate Sally domain — flagged for George.`
+  },
+  {
+    name: '--facet-salesman-field-editable',
+    state: 'tbd',
+    description: 'ASPIRATION: the Salesman field in the load/lot detail header must be updateable',
+    content: `(tbd) ASPIRATION — George 2026-05-30 (screenshot: Lot 32300 detail).
+The load/lot detail header has a "Salesman:" input (beside the Date fields) that
+is currently BLANK and not updateable. It must become editable so a load can be
+assigned / reassigned to a salesperson.
+
+  Target write:  ORDHEAD.SALESMAN c(8) (FK -> SALESMAN.DBF), and the sload
+                 (tordhead) copy while the load is actively worked.
+  Open questions:
+    - validate the entry against SALESMAN.DBF? free text vs picker?
+    - who is allowed to edit it?
+    - does it propagate ordhead <-> tordhead, and to all ABC deals or just the
+      load (blank-abc) row?
+    - same field that should drive the grid badge — see
+      sally:--facet-grid-salesperson-badge.
+See sally:--facet-data-anchor.`
+  },
+  {
+    name: '--facet-grid-salesperson-badge',
+    state: 'tbd',
+    description: 'ASPIRATION: PRIMARY grid badge should show the salesperson (+ maybe assistant), not the entering user',
+    content: `(tbd) ASPIRATION — George 2026-05-30 (screenshot: PRIMARY grid).
+The turquoise person-badge on each grid row (e.g. "MWILLIS", "WWILLIS", or a
+bare person icon with no name) CURRENTLY shows the USER WHO ENTERED THE LOAD —
+not the salesperson.
+
+  Aspiration:    the badge should represent the SALESPERSON assigned to the
+                 load, and possibly a SECOND badge for a SALES ASSISTANT.
+  Current source: the data-entry user (per George) — likely ORDHEAD.WHO or the
+                 login user; to confirm.
+  Target source: ORDHEAD.SALESMAN -> SALESMAN.DBF.NAME, plus an assistant role
+                 (see sally:--facet-sales-assistant-role).
+  Open questions:
+    - keep the entering-user visible somewhere too, or replace it?
+    - one badge or two (salesperson + assistant)?
+    - bare-icon rows = unassigned salesman — what should show?
+See sally:--facet-data-anchor, sally:--facet-salesperson-role.`
+  },
+  {
+    name: '--facet-sales-assistant-role',
+    state: 'tbd',
+    description: 'ASPIRATION: a load may have a sales assistant in addition to the salesperson — data model unknown',
+    content: `(tbd) ASPIRATION — George 2026-05-30.
+Beyond the primary salesperson, a load may also have a SALES ASSISTANT — a
+second person associated with the load. Today the data model has only
+ORDHEAD.SALESMAN c(8); there is NO known field for a sales assistant.
+
+  Open questions:
+    - new ORDHEAD/TORDHEAD field, or a separate assignment table keyed by load?
+    - does the assistant earn commission / credit (cf. sally:--facet-rep-commission)?
+    - does the grid badge show both? (see sally:--facet-grid-salesperson-badge)
+    - is "assistant" per-load, per-salesperson, or per-territory (TERR)?
+This data-model gap must be resolved before the badge + edit aspirations can
+fully land. See sally:--facet-data-anchor.`
   }
 ];
 
