@@ -8,6 +8,122 @@ const path = require('path');
 
 const args = process.argv.slice(2);
 
+// ===================================================================
+// FACETS — domain-knowledge flags. Single source of truth.
+// States: (tbd) named, no answer | (unverified) I wrote it, George hasn't
+// reviewed | (verified) George confirmed. A specialist CANNOT self-verify.
+// Sync contract (facets.js): `--facets` prints one line per facet matching
+//   /(--facet-\S+)\s+\((\w+)\)\s*(.*)/  → name, state, description.
+//   Then `readme.js <facet-name>` is run to capture the body. Keep (state) tight.
+// ===================================================================
+const DOMAIN = 'Salespeople expertise — how salespeople work in ProduceFlow';
+const FACETS = [
+  {
+    name: '--facet-salesperson-role',
+    state: 'unverified',
+    description: 'The salesperson IS the load coordinator — what the role does end to end',
+    content: `The salesperson is the human who owns a Load from order to execution.
+Canonical narrative (BUSINESS_CONTEXT, Willis/Publix example):
+
+  1. Order receipt   — buyer (e.g. Publix) places an order
+  2. Load planning   — set delivery date + destination city
+  3. Sourcing        — find a shipper (e.g. Farmwey, Arcadia FL)
+  4. Logistics       — compute freight time to destination
+  5. Scheduling      — work BACKWARD from delivery to ship date
+  6. Booking         — book the shipper purchase + freight (e.g. Acme)
+  7. Execution       — track on PowerFLOW boards, hand off to dispatch
+
+So a salesperson assembles a multi-party Load: one buyer, one+ shipper(s),
+freight, sometimes a broker. Their accountability lands in ORDHEAD.SALESMAN.
+Their editing surface is sload (tordhead); see gainesville:--facet-sales-vs-accounting.`
+  },
+  {
+    name: '--facet-data-anchor',
+    state: 'unverified',
+    description: 'SALESMAN.DBF to ORDHEAD/TORDHEAD.SALESMAN — how a salesperson is identified in data',
+    content: `SALESMAN.DBF is the master list of salespeople (master lookup):
+    SALESMAN  c(8)   primary key (short code)
+    NAME      c(30)  display name
+    CRLF      c(2)   legacy trailing line break
+
+Every Load and every Deal (ORDHEAD / TORDHEAD row) carries:
+    SALESMAN  c(8)   FK -> SALESMAN.SALESMAN   (the attribution link)
+    TERR      c(5)   territory code (e.g. "BM2")
+
+So "which salesperson owns this load?" = ORDHEAD.SALESMAN joined to SALESMAN.DBF.
+In willdev dev fixtures SALESMAN is often blank while TERR is set — territory is
+populated independently of salesman there. Read live data with desoto:
+    node c:/clients/desoto/tools/dbf-schema.js <path.DBF>
+REFERENCES gainesville:--facet-sales-vs-accounting (plan vs posted).`
+  },
+  {
+    name: '--facet-deal-assembly',
+    state: 'unverified',
+    description: 'The six deal types a salesperson assembles into a Load (color, headpos, financial)',
+    content: `A Load (ORDHEAD blank-ABC) is assembled from Deals (ORDHEAD with ABC letter).
+The salesperson builds it from six deal types:
+
+  COLOR   TYPE       HEADPOS  FINANCIAL?  ROLE
+  Green   Buyer      b        yes         who is buying
+  Red     Shipper    s        yes         who supplies (farm/packer)
+  Blue    Freight    f        yes         who transports
+  Gray    Broker     k        yes         commission party
+  Purple  Inventory  i        no          LOT receiving — in BOTH books early
+  Orange  StoreReq   q        no          LOAD releasing from storage
+
+  Purple XOR Orange (mutually exclusive). HEADPOS = type letter + index ("b1","s2").
+Line items live in ORDTAIL (one ORDHEAD -> many ORDTAIL).
+Financial deals are PLANS in sload until pre-post; inventory is the exception
+(hits aload early). See gainesville:--facet-sales-vs-accounting.`
+  },
+  {
+    name: '--facet-territory-model',
+    state: 'tbd',
+    description: 'What the TERR territory code means and what it drives',
+    content: `(tbd) ORDHEAD/TORDHEAD/SALESMAN-adjacent records carry TERR c(5)
+(observed values like "BM2"). UNANSWERED: what defines a territory, is there a
+master territory table, how does TERR relate to SALESMAN, and what does it drive
+(routing? reporting? commission splits?). No specialist in the facet graph owns
+this. Candidate Sally domain — flagged for George.`
+  },
+  {
+    name: '--facet-rep-commission',
+    state: 'tbd',
+    description: 'How a sales rep is paid commission on a posted load (NOT liquidation commission)',
+    content: `(tbd) gainesville's lifecycle notes only that "accounting adds commissions
+after Post" (ordhead-side). UNANSWERED: rate tables, per-salesman payout, where
+rep commission is computed/stored. Distinct from detroit:--facet-route-liqcomm
+(GET /api/liqcomm = grower LIQUIDATION commission, cf. Core LincolnPark).
+No facet covers sales-REP commission. Candidate Sally domain — flagged for George.`
+  }
+];
+
+// ---------- FACETS index / individual / --json ----------
+const facetArg = args.find(a => a.startsWith('--facet-'));
+if (args.includes('--facets') || facetArg) {
+  if (args.includes('--json')) {
+    console.log(JSON.stringify(
+      FACETS.map(f => ({ name: f.name, domain: DOMAIN, state: f.state, description: f.description, content: f.content })),
+      null, 2));
+    process.exit(0);
+  }
+  if (facetArg) {
+    const f = FACETS.find(x => x.name === facetArg);
+    if (f) { console.log(`(${f.state}) ${f.description}\n\n${f.content}\n\n— sally gen-1`); }
+    else { console.log(`Unknown facet: ${facetArg}\nRun: node readme.js --facets`); }
+    process.exit(0);
+  }
+  // Plain index — one line per facet. (state) kept TIGHT for the sync regex.
+  console.log(`\nsally — ${DOMAIN}\n\nFacets (domain-knowledge flags):\n`);
+  for (const f of FACETS) {
+    console.log(`  ${f.name.padEnd(26)} (${f.state})${' '.repeat(Math.max(1, 13 - f.state.length))}${f.description}`);
+  }
+  console.log(`\n  Read one:  node readme.js <facet-name>`);
+  console.log(`  Built ON the verified gold facet gainesville:--facet-sales-vs-accounting —`);
+  console.log(`  Sally references it rather than restating it.\n`);
+  process.exit(0);
+}
+
 // ---------- JSON ----------
 if (args.includes('--json')) {
   console.log(JSON.stringify({
@@ -225,6 +341,7 @@ if (args.includes('--help') || args.includes('-h')) {
   --research     Full research notes (markdown)
   --library      library/INDEX.md
   --tools        TOOLS.md
+  --facets       Domain-knowledge facets (state-tagged); <facet-name> reads one
   --json         Structured data (for cr.js whois, programmatic use)
   --help, -h     This message
 `);
