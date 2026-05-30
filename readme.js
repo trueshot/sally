@@ -153,6 +153,133 @@ ORDHEAD.SALESMAN c(8); there is NO known field for a sales assistant.
     - is "assistant" per-load, per-salesperson, or per-territory (TERR)?
 This data-model gap must be resolved before the badge + edit aspirations can
 fully land. See sally:--facet-data-anchor.`
+  },
+
+  // ---- sally-PROPOSED feature ideas (2026-05-30) ----
+  // These are Sally's own proposals for produce-salesperson features, offered
+  // for George's review. Distinct from the George-directed aspirations above.
+  {
+    name: '--facet-live-margin-feedback',
+    state: 'tbd',
+    description: 'IDEA (sally): real-time margin/profit feedback while a salesperson builds a load',
+    content: `(tbd) IDEA proposed by sally 2026-05-30.
+Produce margins are thin and prices move daily, yet a salesperson often only
+learns a load is underwater after it is built. The load detail already computes
+a per-load Profit (Lot 32300 screenshot showed a deeply negative profit with
+freight/repack costs swamping the produce sale).
+
+  Aspiration: surface margin LIVE as the salesperson types buyer price, shipper
+  cost, and freight — a running margin %, a target-margin indicator, and a
+  visible warning the moment a load goes negative, BEFORE it is committed.
+  Build on: tordhead/tordtail line items (sload) + the existing Profit calc.
+  Open questions: target margin by commodity? by customer? who sets it?
+                  warn-only or block pre-post? include allocated freight/labor?
+See gainesville:--facet-sales-vs-accounting (sload = the working copy),
+sally:--facet-deal-assembly.`
+  },
+  {
+    name: '--facet-my-book-dashboard',
+    state: 'tbd',
+    description: 'IDEA (sally): a "my book of business" view scoped to the logged-in salesperson',
+    content: `(tbd) IDEA proposed by sally 2026-05-30.
+The PRIMARY grid shows ALL loads with a per-row person badge. A salesperson
+instead wants THEIR book: loads where SALESMAN = me, what is still open / needs
+attention, dollars moved this week, blended margin, and commission accruing.
+
+  Build on: ORDHEAD.SALESMAN filter; sally:--facet-rep-commission for the payout
+  side. A natural home is a salesperson landing page.
+  Open questions: what defines "my" loads — salesman vs assistant vs entering
+                  user? period (week/month)? quota/targets to measure against?
+See sally:--facet-data-anchor, sally:--facet-salesperson-role,
+sally:--facet-grid-salesperson-badge.`
+  },
+  {
+    name: '--facet-needs-worklist',
+    state: 'tbd',
+    description: 'IDEA (sally): an actionable "what my loads still need" worklist',
+    content: `(tbd) IDEA proposed by sally 2026-05-30.
+The grid already flags gaps with labels seen in the screenshot — "Frt/Need"
+(freight needed), "Prod/Need" (shipper/product needed), "Appt Need" (appointment
+needed). Today they are scattered across rows.
+
+  Aspiration: roll these into ONE prioritized worklist per salesperson — what is
+  missing on which of my loads, sorted by ship-date urgency, so nothing falls
+  through. "3 loads need freight before Friday."
+  Build on: those *Need flags, SHIP_DATE / DUE_DATE, and deal completeness
+  (which colored deals are filled vs empty).
+  Open questions: are the *Need labels computed or manually applied? what is the
+                  urgency sort — ship date, due date, or value at risk?
+See sally:--facet-deal-assembly, sally:--facet-my-book-dashboard.`
+  },
+  {
+    name: '--facet-reorder-from-history',
+    state: 'tbd',
+    description: 'IDEA (sally): one-click reorder of a buyer recurring order from history',
+    content: `(tbd) IDEA proposed by sally 2026-05-30.
+Produce buyers (grocery chains, terminal markets) reorder similar items on a
+cadence. The business context already mentions Template Loads, but those are
+static patterns, not a buyer's actual recent order.
+
+  Aspiration: from a buyer's history, prefill a new load with their usual items
+  and quantities ("same as last Tuesday's Ingles order"), so the salesperson
+  edits rather than retypes — fewer keystrokes, fewer errors, faster turnaround.
+  Build on: ORDHEAD/ORDTAIL history keyed by buyer (ID_NO), Template Loads.
+  Open questions: match by buyer + commodity + weekday? how far back to look?
+                  how to handle seasonal items that drop out?
+See sally:--facet-deal-assembly, sally:--facet-data-anchor.`
+  },
+  {
+    name: '--facet-sellable-inventory-position',
+    state: 'tbd',
+    description: 'IDEA (sally): a sell-side view of what inventory is available (and aging) to move',
+    content: `(tbd) IDEA proposed by sally 2026-05-30.
+A produce salesperson constantly asks "what do I have to move today, and what is
+about to spoil?" The model has Inventory (purple, headpos i) and Incoming deals,
+but no salesperson-facing "what is available to sell" position.
+
+  Aspiration: a position view of unsold / uncommitted inventory and incoming,
+  with age (days on hand) and quantity, so the salesperson pushes what must move
+  FIRST. Perishability makes this urgent in a way other industries lack.
+  Build on: inventory (purple) deals, LOT classification, Incoming.
+  Open questions: "available" = on hand minus already-committed? age from
+                  receipt date? include in-transit incoming?
+See sally:--facet-deal-assembly, gainesville:--facet-sales-vs-accounting.`
+  },
+  {
+    name: '--facet-market-price-reference',
+    state: 'tbd',
+    description: 'IDEA (sally): current market price reference shown at quote time',
+    content: `(tbd) IDEA proposed by sally 2026-05-30.
+Produce prices swing daily with supply, season, and weather (USDA Market News /
+terminal-market prices are the industry reference). When a salesperson quotes a
+buyer or negotiates a shipper cost, the current market range is the difference
+between a good deal and money left on the table.
+
+  Aspiration: surface a market-price reference per commodity inline next to the
+  price field while building a deal.
+  Build on: commodity codes (GULP — cf. gulfport / sunrise ProduceStandards) to
+  map a line item to a market item; an external market-price source.
+  Open questions: data source — USDA AMS API, a feed, or manual entry? how to map
+                  internal commodity codes to market report items? cache cadence?
+See sally:--facet-deal-assembly.`
+  },
+  {
+    name: '--facet-rejection-repack-flow',
+    state: 'tbd',
+    description: 'IDEA (sally): structured handling of rejected / repacked produce',
+    content: `(tbd) IDEA proposed by sally 2026-05-30.
+Rejections and repacks are a recurring produce reality. The screenshots show it
+directly: a load note "2020 rej bringing to Lodge to repack", a Liquidation tab,
+and "Repacking Labor" line items on the deal.
+
+  Aspiration: a guided flow when a buyer rejects produce — capture the reason,
+  route the product to repack or liquidation, adjust the deal, and track the
+  resulting claim / loss and who absorbs it (grower, carrier, or us).
+  Build on: the existing Liquidation tab, repack-labor line items, and the
+  commission side (detroit:--facet-route-liqcomm = liquidation commission).
+  Open questions: who bears the loss by rejection reason? does this reopen a
+                  posted load? link to a claim record?
+See sally:--facet-rep-commission, sally:--facet-deal-assembly.`
   }
 ];
 
